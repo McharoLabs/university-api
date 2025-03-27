@@ -53,39 +53,52 @@ This project is a simple Django REST Framework API that provides endpoints for s
 
 ### Installation
 
-1.  Clone the repository:
-    ```bash
-    git clone [https://github.com/McharoLabs/university-api.git](https://github.com/McharoLabs/university-api.git)
-    cd university-api
-    ```
-2.  Create a virtual environment:
-    ```bash
-    python3 -m venv env
-    ```
-3.  Activate the virtual environment:
-    ```bash
-    source env/bin/activate
-    ```
-4.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-5.  Create a `.env` file in the root of your project directory. Copy the contents of `.env.example` and replace the placeholder values with your actual database credentials:
-    ```
-    ENGINE=django.db.backends.your_engine
-    DB_NAME=your_database_name
-    DB_USER=your_db_user
-    DB_PASSWORD=your_user_password
-    DB_HOST=your_db_host
-    PORT=your_db_port
-    ```
-    **Important:** Replace `your_engine`, `your_database_name`, `your_db_user`, `your_user_password`, `your_db_host`, and `your_db_port` with your actual database settings. For example, if you are using PostgreSQL, `ENGINE` would be `django.db.backends.postgresql`.
-6.  Run migrations:
-    ```bash
-    python manage.py migrate
-    ```
-7.  Start the development server:
-    ```bash
-    python manage.py runserver
-    ```
-    The API will be available at `http://127.0.0.1:8000/`.
+1. Make directory
+
+   ```bash
+   mkdir project
+   cd project
+   ```
+
+2. Create a virtual environment:
+
+   ```bash
+   python3 -m venv env
+   ```
+
+3. Activate the virtual environment:
+
+   ```bash
+   source env/bin/activate
+   ```
+
+4. Clone the repository:
+
+   ```bash
+   git clone [https://github.com/McharoLabs/university-api.git](https://github.com/McharoLabs/university-api.git)
+   cd university-api
+   ```
+
+5. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+6. Create a `.env` file in the root of your project directory. Copy the contents of `.env.example` and replace the placeholder values with your actual database credentials:
+   ```
+   ENGINE=django.db.backends.your_engine
+   DB_NAME=your_database_name
+   DB_USER=your_db_user
+   DB_PASSWORD=your_user_password
+   DB_HOST=your_db_host
+   PORT=your_db_port
+   ```
+   **Important:** Replace `your_engine`, `your_database_name`, `your_db_user`, `your_user_password`, `your_db_host`, and `your_db_port` with your actual database settings. For example, if you are using PostgreSQL, `ENGINE` would be `django.db.backends.postgresql`.
+7. Run migrations:
+   ```bash
+   python manage.py migrate
+   ```
+8. Start the development server:
+   ```bash
+   python manage.py runserver
+   ```
+   The API will be available at `http://127.0.0.1:8000/`.
