@@ -53,14 +53,14 @@ This project is a simple Django REST Framework API that provides endpoints for s
 
 ### Installation
 
-1. Make directory
+1. Create the project directory:
 
    ```bash
    mkdir project
    cd project
    ```
 
-2. Create a virtual environment:
+2. Create a virtual environment to isolate our package dependencies locally:
 
    ```bash
    python3 -m venv env
@@ -69,7 +69,7 @@ This project is a simple Django REST Framework API that provides endpoints for s
 3. Activate the virtual environment:
 
    ```bash
-   source env/bin/activate
+   source env/bin/activate # On Windows use `env\Scripts\activate`
    ```
 
 4. Clone the repository:
