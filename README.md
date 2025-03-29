@@ -39,8 +39,8 @@ This project is a simple Django REST Framework API that provides endpoints for s
 
 ### API URLs:
 
-- **Students Endpoint:** [http://13.60.65.147/api/students/](http://13.60.65.147/api/students/)
-- **Subjects Endpoint:** [http://13.60.65.147/api/subjects/](http://13.60.65.147/api/subjects/)
+- **Students Endpoint:** [https://cs.ua.seranise.co.tz/api/students/](https://cs.ua.seranise.co.tz/api/students/)
+- **Subjects Endpoint:** [https://cs.ua.seranise.co.tz/api/subjects/](https://cs.ua.seranise.co.tz/api/subjects/)
 
 ## Setup Instructions
 
