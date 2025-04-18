@@ -189,4 +189,25 @@ This script will automate the process of updating the server software and packag
    ```bash
    mkdir bash_scripts
    cd bash_scripts
+
+   ```
+
+2. **Create and add the scripts**
+   Create the following Bash scripts:
+
+   ```bash
+   tound health_check.sh backup_api.sh update_server.sh
+   ```
+
+3. **Set execute permissions on the scripts:**
+   ```bash
+   chmod +x health_check.sh backup_api.sh update_server.sh
+   ```
+4. **Run the scripts:**
+
+   ```bash
+   sudo ./health_check.sh
+   sudo ./backup_api.sh
+   sudo ./update_server.sh
+
    ```
