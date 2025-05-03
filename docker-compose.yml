@@ -51,16 +51,6 @@ services:
       - redis
       - db
 
-  client:
-    build:
-      context: ./university-client
-    container_name: university-client
-    command: npm run build
-    ports:
-      - 5173:5173
-    volumes:
-      - client_build:/client/dist
-
   frontend1:
     build:
       context: ./university-client
@@ -98,32 +88,18 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - 80:8080
-    volumes:
-      - ./nginx/nginx-setup.conf:/etc/nginx/conf.d/default.conf:ro
-      - client_build:/var/www/client
-      - ./university_api/staticfiles:/app/staticfiles
-    depends_on:
-      - client
-      - backend
-
-  nginx-lb:
-    image: nginx:latest
-    container_name: nginx-lb
-    ports:
       - "80:80"
     volumes:
       - ./nginx/nginx-setup.conf:/etc/nginx/nginx.conf:ro
+      - ./university_api/staticfiles:/app/staticfiles
     depends_on:
       - frontend1
       - frontend2
       - frontend3
+      - backend
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8081:8080
-
-volumes:
-  client_build:
