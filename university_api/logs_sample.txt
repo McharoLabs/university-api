@@ -1,0 +1,139 @@
+SERVER HEALTH LOGS
+################################################################
+(env) ubuntu@ip-172-31-41-51:~/scripts$ cat /var/log/server_health.log 
+2025-04-18 22:07:52 Starting health check...
+2025-04-18 22:07:52 CPU usage: 0%
+2025-04-18 22:07:52 Memory usage: 58.8605%
+2025-04-18 22:07:52 Disk usage: 46%
+2025-04-18 22:07:52 nginx is running.
+2025-04-18 22:07:52 API endpoint https://cs.ua.seranise.co.tz/api/students/ is UP.
+2025-04-18 22:07:52 API endpoint https://cs.ua.seranise.co.tz/api/subjects/ is UP.
+2025-04-18 22:07:52 Health check complete.
+(env) ubuntu@ip-172-31-41-51:~/scripts$ 
+
+
+
+
+
+BACKUP LOGS
+##################################################################
+ubuntu@ip-172-31-41-51:~$ cat backups/
+postgres_backup_20250418-220450.sql           university_api_backup_20250418-220450.tar.gz  
+ubuntu@ip-172-31-41-51:~$ cat backups/postgres_backup_20250418-220450.sql 
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 17.4 (Ubuntu 17.4-1.pgdg24.04+2)
+-- Dumped by pg_dump version 17.4 (Ubuntu 17.4-1.pgdg24.04+2)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPDATE LOGS
+###############################################################
+(env) ubuntu@ip-172-31-41-51:~/scripts$ cat /var/log/update.log 
+\[2025-04-18 22:31:41\] Starting system and project update...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following NEW packages will be installed:
+  linux-aws-headers-6.8.0-1027 linux-aws-tools-6.8.0-1027
+  linux-headers-6.8.0-1027-aws linux-image-6.8.0-1027-aws
+  linux-modules-6.8.0-1027-aws linux-tools-6.8.0-1027-aws
+The following packages will be upgraded:
+  apport apport-core-dump-handler cloud-init landscape-common libnss-systemd
+  libpam-systemd libplymouth5 libsystemd-shared libsystemd0 libudev1 linux-aws
+  linux-base linux-headers-aws linux-image-aws linux-libc-dev
+  linux-tools-common openssh-client openssh-server openssh-sftp-server pci.ids
+  plymouth plymouth-theme-ubuntu-text python3-apport python3-problem-report
+  python3-software-properties rsyslog snapd software-properties-common
+  sosreport systemd systemd-dev systemd-resolved systemd-sysv udev
+  update-notifier-common
+35 upgraded, 6 newly installed, 0 to remove and 0 not upgraded.
+Need to get 119 MB of archives.
+After this operation, 185 MB of additional disk space will be used.
+Get:1 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libnss-systemd amd64 255.4-1ubuntu8.6 [159 kB]
+Get:2 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 systemd-dev all 255.4-1ubuntu8.6 [104 kB]
+
+
+Requirement already satisfied: sqlparse==0.5.3 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 7)) (0.5.3)
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions, students
+Running migrations:
+  No migrations to apply.
+[2025-04-18 22:44:53] 🔄 Supervisor service restarted.
+[2025-04-18 22:44:53] 🔄 Web server (nginx) restarted.
+[2025-04-18 22:44:53] ✅ Update complete!
+[2025-04-18 22:50:08] Starting system and project update...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following packages were automatically installed and are no longer required:
+  linux-aws-headers-6.8.0-1026 linux-aws-tools-6.8.0-1026
+  linux-headers-6.8.0-1026-aws linux-image-6.8.0-1026-aws
+  linux-modules-6.8.0-1026-aws linux-tools-6.8.0-1026-aws
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Already on 'main'
+Your branch is up to date with 'origin/main'.
+From https://github.com/McharoLabs/university-api
+ * branch            main       -> FETCH_HEAD
+   b892729..82435db  main       -> origin/main
+Updating b892729..82435db
+Fast-forward
+ update_server.sh | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 update_server.sh
+[2025-04-18 22:50:08] ✅ Git pull from main successful.
+Requirement already satisfied: asgiref==3.8.1 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 1)) (3.8.1)
+Requirement already satisfied: Django==5.1.7 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 2)) (5.1.7)
+Requirement already satisfied: django-environ==0.12.0 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 3)) (0.12.0)
+Requirement already satisfied: djangorestframework==3.15.2 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 4)) (3.15.2)
+Requirement already satisfied: gunicorn==23.0.0 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 5)) (23.0.0)
+Requirement already satisfied: packaging==24.2 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 6)) (24.2)
+Requirement already satisfied: psycopg2-binary==2.9.10 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 7)) (2.9.10)
+Requirement already satisfied: sqlparse==0.5.3 in /home/ubuntu/env/lib/python3.12/site-packages (from -r requirements.txt (line 8)) (0.5.3)
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions, students
+Running migrations:
+  No migrations to apply.
+[2025-04-18 22:50:08] 🔄 Supervisor service restarted.
+[2025-04-18 22:50:08] 🔄 Web server (nginx) restarted.
+[2025-04-18 22:50:08] ✅ Update complete!
+(env) ubuntu@ip-172-31-41-51:~/scripts$ 

@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 import environ
+from datetime import timedelta
+from kombu import Queue, Exchange
+
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -31,8 +34,17 @@ SECRET_KEY = "django-insecure-6udn^j#$k4l@%9=2@mq@o*_sd2zd^%vty%3dwh!k7y8e*rjd#4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['13.60.65.147', '127.0.0.1', 'cs.ua.seranise.co.tz']
+ALLOWED_HOSTS = [
+    '13.60.65.147', 
+    'cs.ua.seranise.co.tz', 
+    'http://localhost:5173', 
+    '127.0.0.1',
+]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
 # Application definition
 
@@ -43,6 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "students",
     "rest_framework",
 ]
@@ -50,6 +63,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -91,11 +105,12 @@ WSGI_APPLICATION = "university_api.wsgi.application"
 
 DATABASES = {
     "default": {
-        'ENGINE': env("ENGINE"),
-        'NAME': env("DB_NAME"),
-        'USER': env("DB_USER"),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "db",
+        "PORT": 5432,
     }
 }
 
@@ -140,3 +155,35 @@ STATIC_ROOT = os.path.join(BASE_DIR, '..', 'assets', 'static')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+CELERY_TASK_ROUTES = {
+    'students.tasks.list_students': {'queue': 'high_priority'}
+}
+
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+
+CELERY_TASK_QUEUES = (
+    Queue('high_priority', Exchange('high_priority'), routing_key='high_priority'),
+    Queue('low_priority', Exchange('low_priority'), routing_key='low_priority'),
+    Queue('default', Exchange('default'), routing_key='default'),
+)
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TASK_DEFAULT_RETRY_DELAY = 5
+CELERY_TASK_MAX_RETRIES = 3
+
+CELERY_BEAT_SCHEDULE = {
+    'list_students': {
+        'task': 'students.tasks.list_students',
+        'schedule': timedelta(minutes=1),
+        'options': {
+            'queue': 'high_priority',
+            'priority': 10
+        },
+    }
+}
