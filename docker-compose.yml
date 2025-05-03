@@ -113,7 +113,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/nginx-lb.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx-setup.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - frontend1
       - frontend2
