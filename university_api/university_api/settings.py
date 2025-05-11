@@ -37,14 +37,17 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '13.60.65.147', 
     'cs.ua.seranise.co.tz', 
-    'http://localhost:5173', 
+    'localhost', 
     '127.0.0.1',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://localhost:8082",
+    "http://127.0.0.1:8082",
 ]
+
 
 # Application definition
 
@@ -149,7 +152,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = '/app/staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -187,3 +190,7 @@ CELERY_BEAT_SCHEDULE = {
         },
     }
 }
+
+# Proxy configuration
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')

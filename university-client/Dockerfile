@@ -2,13 +2,17 @@ FROM node:20.10.0-alpine
 
 WORKDIR /client
 
-ENV PATH="./node_modules/.bin:$PATH"
-
-COPY package*.json ./
+COPY package.json .
 
 RUN npm install
 
-COPY . .
-RUN npm run build
-CMD ["npm", "run", "dev", "--", "--host"]
+RUN npm i -g serve
 
+COPY . .
+
+
+RUN npm run build
+
+EXPOSE 5173
+
+CMD ["serve", "-s", "dist", "-l", "5173"] 

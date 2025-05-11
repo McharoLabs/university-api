@@ -1,11 +1,9 @@
 services:
   app:
-    build:
-      context .
+    image: seranise/university-client:latest
     volumes:
-      - .:/core
+      - .:/client
     ports:
       - 5173:5173
-    image: university-client
     container_name: university-client-container
     command: npm run dev -- --host 0.0.0.0
