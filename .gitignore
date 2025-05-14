@@ -42,6 +42,7 @@ data/
 
 # Nginx
 # nginx/*.conf
+nginx/nginx-lb.conf
 
 # Client build
 /client/build/
