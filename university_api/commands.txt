@@ -1,0 +1,8 @@
+docker build --tag university-api .
+docker run --publish 8000:8000 university-api
+docker exec -it django_container /bin/bash
+
+#For alpine
+docker exec -it university-api sh
+
+docker exec -it university-api python3 manage.py migrate

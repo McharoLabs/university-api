@@ -1,0 +1,3 @@
+docker build --tag university-client .
+docker run --publish 5173:5173 university-client
+docker compose run app
