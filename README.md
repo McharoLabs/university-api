@@ -212,7 +212,7 @@ This script will automate the process of updating the server software and packag
 
    ```
 
-### Docker, Nginx, Front-End Load Balance
+# Docker, Nginx, Front-End Load Balance
 
 A front-end interface for API and high availability (HA) at
 the application level by load balancing the front-end application. A React
