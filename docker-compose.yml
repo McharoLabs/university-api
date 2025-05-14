@@ -37,7 +37,7 @@ services:
     image: seranise/university-client:latest
     container_name: frontend1
     environment:
-      - NODE_ID=frontend1
+      - VITE_NODE_ID=frontend1
     ports:
       - "3000:5173"
     depends_on:
@@ -49,7 +49,7 @@ services:
     image: seranise/university-client:latest
     container_name: frontend2
     environment:
-      - NODE_ID=frontend2
+      - VITE_NODE_ID=frontend2
     ports:
       - "3001:5173"
     depends_on:
@@ -61,7 +61,7 @@ services:
     image: seranise/university-client:latest
     container_name: frontend3
     environment:
-      - NODE_ID=frontend3
+      - VITE_NODE_ID=frontend3
     ports:
       - "3002:5173"
     depends_on:

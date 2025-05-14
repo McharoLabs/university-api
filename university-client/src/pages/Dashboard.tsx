@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const navigate = useNavigate();
 
+  const nodeId = import.meta.env.VITE_NODE_ID;
+
   const handleNavigate = (path: string) => {
     navigate(path);
   };
@@ -10,9 +12,14 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 px-4">
       <div className="bg-white shadow-xl rounded-2xl p-10 w-full max-w-md text-center transition-all duration-500">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">
           Welcome to the Dashboard
         </h1>
+        {/* Show the current node ID */}
+        <p className="text-sm text-gray-500 mb-8">
+          Serving from:{" "}
+          <span className="font-semibold text-gray-700">{nodeId}</span>
+        </p>
         <div className="flex flex-col gap-6">
           <button
             onClick={() => handleNavigate("/students/all")}
