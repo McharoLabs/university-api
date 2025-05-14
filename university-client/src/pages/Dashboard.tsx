@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const nodeId = import.meta.env.VITE_NODE_ID;
+  const nodeId = process.env.VITE_NODE_ID || import.meta.env.VITE_NODE_ID;
 
   const handleNavigate = (path: string) => {
     navigate(path);

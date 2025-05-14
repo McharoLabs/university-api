@@ -211,3 +211,331 @@ This script will automate the process of updating the server software and packag
    sudo ./update_server.sh
 
    ```
+
+### Docker, Nginx, Front-End Load Balance
+
+A front-end interface for API and high availability (HA) at
+the application level by load balancing the front-end application. A React
+front-end for the /students and /subjects endpoints and implement load balancing with
+NGINX or HAProxy across at least three front-end nodes, displaying the responding node on the
+homepage.
+
+### Steps
+
+1. **Create React App using vite**
+
+```bash
+   npm create vite@latest
+```
+
+Follow Steps
+
+2. **Development**
+   create ReactJs UI integrating University API to consume the data
+
+- **Students Endpoint:** [https://cs.ua.seranise.co.tz/api/students/](https://cs.ua.seranise.co.tz/api/students/)
+- **Subjects Endpoint:** [https://cs.ua.seranise.co.tz/api/subjects/](https://cs.ua.seranise.co.tz/api/subjects/)
+
+3. **Foldering**
+   Create one folder and put the two project inside the folder
+
+```bash
+   mkdir app
+   mv ./university_api ./app/ ./university-client ./app
+```
+
+This ensures that both university_api and university-client are moved into the app folder. After that, your folder structure will look something like this:
+
+```bash
+   cd app
+   app/
+      university_api/
+      university-client/
+```
+
+4. **Create nginx folder**
+   This folder contains all the nginx configuration as follows
+
+```bash
+   mkdir nginx
+   touch nginx.conf
+```
+
+The configuration inside the nginx configuration for the frontend load balancer and api
+
+```bash
+   upstream frontend {
+      server frontend1:5173;
+      server frontend2:5173;
+      server frontend3:5173;
+   }
+
+   upstream backend {
+      server university-api:8000;
+   }
+
+   server {
+      listen 80;
+      server_name cs.ua.seranise.co.tz;
+
+      return 301 https://$host$request_uri;
+   }
+
+   server {
+      listen 443 ssl;
+      server_name cs.ua.seranise.co.tz www.cs.ua.seranise.co.tz;
+
+      ssl_certificate /etc/letsencrypt/original_certs/fullchain1.pem;
+      ssl_certificate_key /etc/letsencrypt/original_certs/privkey1.pem;
+      ssl_trusted_certificate /etc/letsencrypt/original_certs/chain1.pem;
+      ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+      location / {
+         proxy_pass http://frontend;
+         proxy_http_version 1.1;
+         proxy_set_header Upgrade $http_upgrade;
+         proxy_set_header Connection 'upgrade';
+         proxy_set_header Host $host;
+         proxy_cache_bypass $http_upgrade;
+      }
+
+      location /api/ {
+         proxy_pass http://backend/api/;
+         proxy_http_version 1.1;
+         proxy_set_header Upgrade $http_upgrade;
+         proxy_set_header Connection 'upgrade';
+         proxy_set_header Host $host;
+         proxy_cache_bypass $http_upgrade;
+         proxy_set_header X-Forwarded-Proto $scheme;
+         proxy_set_header X-Forwarded-Host $host;
+         proxy_set_header X-Forwarded-Port $server_port;
+      }
+
+      location /admin/ {
+         proxy_pass http://backend/admin/;
+         proxy_http_version 1.1;
+         proxy_set_header Upgrade $http_upgrade;
+         proxy_set_header Connection 'upgrade';
+         proxy_set_header Host $host;
+         proxy_cache_bypass $http_upgrade;
+         proxy_set_header X-Forwarded-Proto $scheme;
+         proxy_set_header X-Forwarded-Host $host;
+         proxy_set_header X-Forwarded-Port $server_port;
+      }
+
+      location /static/ {
+         alias /app/staticfiles/;
+         expires 1y;
+         access_log off;
+         add_header Cache-Control "public";
+      }
+
+      location /media/ {
+         alias /app/staticfiles/media/;
+         expires 1y;
+         access_log off;
+         add_header Cache-Control "public";
+      }
+
+      error_page 500 502 503 504 /50x.html;
+      location = /50x.html {
+         root /usr/share/nginx/html;
+      }
+   }
+```
+
+5. **Create docker-compose folder inside the app**
+
+```bash
+   touch docker-compose.yml
+```
+
+Configure dcker-compose.yml accordingly, reffer to
+
+- **docker-compose.yml:** [https://github.com/McharoLabs/university-api/blob/main/docker-compose.yml](https://github.com/McharoLabs/university-api/blob/main/docker-compose.yml)
+
+6. **Dockerfile**
+   For each child project inside the app, create Dockerfile special for building the project
+
+```bash
+   # University_api Dockerfile configuration
+   cd university_api
+   touch Dockerfile
+```
+
+Configurations
+
+```bash
+   FROM python:3.12-alpine
+
+# Install system dependencies
+RUN apk update && \
+    apk add --no-cache \
+    postgresql-dev \
+    gcc \
+    python3-dev \
+    musl-dev \
+    libffi-dev \
+    jpeg-dev \
+    zlib-dev \
+    gettext
+
+# Create user and set permissions
+RUN adduser -D appuser
+WORKDIR /app
+RUN chown appuser:appuser /app
+
+# Copy and install requirements
+COPY --chown=appuser:appuser requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY --chown=appuser:appuser . .
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
+# Switch to non-root user
+USER appuser
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "university_api.wsgi"]
+```
+
+```bash
+   # University-client Configurations
+   cd ../university-client
+   touch Dockerfile
+```
+
+Configurations
+
+```bash
+   FROM node:20.10.0-alpine
+
+WORKDIR /client
+
+COPY package.json .
+
+RUN npm install
+
+RUN npm i -g serve
+
+COPY . .
+
+
+RUN npm run build
+
+EXPOSE 5173
+
+CMD ["serve", "-s", "dist", "-l", "5173"]
+```
+
+7. **Foldere Structure**
+
+```bash
+   app/
+  nginx/
+    nginx.conf
+  university_api/
+    Dockerfile
+  university-client/
+    Dockerfile
+  docker-compose.yml
+```
+
+8. **Building the app**
+
+- **Build university client**
+  ```bash
+     cd university-client
+     docker build -t seranise/university-client:latest .
+  ```
+- **Push to docker hub**
+
+  ```bash
+     docker push seranise/university-client:latest
+  ```
+
+- **Build university api**
+  ```bash
+     cd university_api
+     docker build -t seranise/university-api:latest .
+  ```
+- **Push to docker hub**
+  ```bash
+     docker push seranise/university-api:latest
+  ```
+
+9. **Run the project**
+
+```bash
+   docker compose up -d
+```
+
+**Finally the app is up and running, Now we need to deploy to AWS**
+
+1. **Create AWS instance, update the instance, install docker and pull the project from GitHub**
+
+```bash
+   # Step 1: SSH into your AWS EC2 instance (replace with your instance's public IP)
+   ssh -i /path/to/your-key.pem ubuntu@<your-ec2-public-ip>
+
+   # Step 2: Update your AWS instance packages
+   sudo apt update && sudo apt upgrade -y
+
+   # Step 3: Install Docker
+   # Install required dependencies
+   sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+
+   # Add Docker's official GPG key
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+   # Set up the stable Docker repository
+   echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+   # Install Docker
+   sudo apt update
+   sudo apt install docker-ce docker-ce-cli containerd.io -y
+
+   # Step 4: Start Docker and enable it to start on boot
+   sudo systemctl start docker
+   sudo systemctl enable docker
+
+   # Step 5: Install Docker Compose
+   # Download the latest stable version of Docker Compose
+   sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+   # Set permissions to make Docker Compose executable
+   sudo chmod +x /usr/local/bin/docker-compose
+
+   # Step 6: Verify Docker and Docker Compose installation
+   docker --version
+   docker-compose --version
+
+   # Step 7: Pull the project from GitHub
+   # Install git if it's not installed yet
+   sudo apt install git -y
+
+   # Clone the project repository from GitHub
+   git clone https://github.com/McharoLabs/university-api.git
+
+   # Step 8: Navigate into the project directory
+   cd university-api
+
+   # Step 9: (Optional) Build the Docker containers using Docker Compose
+   # If you have a `docker-compose.yml` file inside your project, run the following to build and start the containers
+   sudo docker-compose up --build -d
+
+   # Step 10: Check the containers running with Docker Compose
+   sudo docker ps
+```
+
+Now the app is up and running.
+
+**App URL and public docker image**
+
+- **Students Endpoint:** [https://cs.ua.seranise.co.tz/api/students/](https://cs.ua.seranise.co.tz/api/students/)
+- **Subjects Endpoint:** [https://cs.ua.seranise.co.tz/api/subjects/](https://cs.ua.seranise.co.tz/api/subjects/)
+- **Dokcer Client Image:** [https://hub.docker.com/repository/docker/seranise/university-client/general](https://hub.docker.com/repository/docker/seranise/university-client/general)
+- **Dcker API Image:** [https://hub.docker.com/repository/docker/seranise/university-api/general](https://hub.docker.com/repository/docker/seranise/university-api/general)
+- **React Front-End:** [https://cs.ua.seranise.co.tz/](https://cs.ua.seranise.co.tz/)
