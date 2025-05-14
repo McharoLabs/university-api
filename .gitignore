@@ -41,7 +41,7 @@ data/
 *.sql
 
 # Nginx
-nginx/*.conf
+# nginx/*.conf
 
 # Client build
 /client/build/
