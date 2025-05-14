@@ -67,3 +67,5 @@ pytest_cache/
 # OS
 .DS_Store
 Thumbs.db
+
+university_api/celerybeat-schedule
