@@ -48,6 +48,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8082",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://cs.ua.seranise.co.tz",
+]
+
 
 # Application definition
 
@@ -193,4 +197,4 @@ CELERY_BEAT_SCHEDULE = {
 
 # Proxy configuration
 USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
